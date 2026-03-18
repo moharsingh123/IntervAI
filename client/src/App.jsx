@@ -11,7 +11,7 @@ import InterviewHistory from "./pages/InterviewHistory";
 import Pricing from "./pages/Pricing";
 import InterviewReport from "./pages/InterviewReport";
 
-export const ServerUrl= "http://localhost:8000"
+export const ServerUrl= "https://intervai-qhc8.onrender.com"
 
 const App =()=>{
   // find the current user from the backend server and set it in the state
