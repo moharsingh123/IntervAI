@@ -15,7 +15,7 @@ import hrImg from '../assets/HR.png';
 import techImg from '../assets/tech.png';
 import creditImg from '../assets/credit.png';
 import resumeImg from '../assets/resume.png';
-import pdgImg  from '../assets/PDF.png';
+import pdgImg  from '../assets/pdf.png';
 import analyticsImg from '../assets/history.png';
 import confidenceImg from '../assets/confi.png';
 import Footer from "../components/Footer";
