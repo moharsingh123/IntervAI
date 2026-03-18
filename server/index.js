@@ -12,7 +12,7 @@ dotenv.config();
 const app= express();
 app.use(cors(
     {
-        origin:"http://localhost:5173", // in production it should be the frontend url
+        origin:"https://intervai-client-1azb.onrender.com", // in production it should be the frontend url
         credentials:true
 
     }
