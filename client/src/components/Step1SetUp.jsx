@@ -31,7 +31,12 @@ const Step1SetUp = ({ onStart }) => {
     const formData= new FormData()
     formData.append("resume" , resumeFile)
     try {
-        const result= await axios.post(ServerUrl + '/api/interview/resume' , formData,{withCredentials:true})
+        const token = localStorage.getItem("token");
+        const result= await axios.post(ServerUrl + '/api/interview/resume' , formData,{
+                headers: {
+                      Authorization: `Bearer ${token}`
+                 }
+        })
         console.log(result.data);
 
         setRole(result.data.role || "")
@@ -56,9 +61,15 @@ const Step1SetUp = ({ onStart }) => {
    const handleStart= async ()=>{
     setLoading(true);
     try {
+        const token = localStorage.getItem("token");
         const result = await axios.post(ServerUrl + '/api/interview/generate-questions' ,{
             role,skills, experience, mode, resumeText, projects
-        }, {withCredentials:true})
+        }, 
+              {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+        )
         console.log(result.data);
         if (userData) {
             dispatch(setUserData({...userData, credits:result.data.creditsLeft}))
