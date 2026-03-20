@@ -25,7 +25,8 @@ const Auth = ({isModel= false})=>{
                     }
                     )
                   
-                  
+                  console.log("FULL RESPONSE:", result);
+                    console.log("DATA:", result.data);
                     if (result.data.success) {
                         console.log("TOKEN:" , result.data.token)
                    localStorage.setItem("token", result.data.token); // ✅ safe       
