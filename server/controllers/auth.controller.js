@@ -17,6 +17,7 @@ export const googleAuth= async(req, res)=>{
         }
         // create a token
         const token = await getToken(user._id); // 
+        
         // store the token in the cookies
         res.cookie("token" ,token ,
             {
@@ -30,7 +31,8 @@ export const googleAuth= async(req, res)=>{
         return res.status(200).json({
             user,
             success:true,
-            message:"User authenticated successfully  or User registered successfully "
+            message:"User authenticated successfully  or User registered successfully ",
+            token
         })
         
 
