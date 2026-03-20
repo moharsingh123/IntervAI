@@ -32,11 +32,16 @@ const Step1SetUp = ({ onStart }) => {
     formData.append("resume" , resumeFile)
     try {
         const token = localStorage.getItem("token");
-        const result= await axios.post(ServerUrl + '/api/interview/resume' , formData,{
-                headers: {
-                      Authorization: `Bearer ${token}`
-                 }
-        })
+        if(!token){
+            console.error("No auth token found in localStorage. Please login first.");
+            setAnalyzing(false);
+            return;
+        }
+        const result = await axios.post(ServerUrl + '/api/interview/resume', formData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log(result.data);
 
         setRole(result.data.role || "")
@@ -62,14 +67,18 @@ const Step1SetUp = ({ onStart }) => {
     setLoading(true);
     try {
         const token = localStorage.getItem("token");
-        const result = await axios.post(ServerUrl + '/api/interview/generate-questions' ,{
-            role,skills, experience, mode, resumeText, projects
-        }, 
-              {
+        if(!token){
+            console.error("No auth token found in localStorage. Please login first.");
+            setLoading(false);
+            return;
+        }
+        const result = await axios.post(ServerUrl + '/api/interview/generate-questions', {
+            role, skills, experience, mode, resumeText, projects
+        }, {
             headers: {
-              Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
-        )
+        });
         console.log(result.data);
         if (userData) {
             dispatch(setUserData({...userData, credits:result.data.creditsLeft}))
