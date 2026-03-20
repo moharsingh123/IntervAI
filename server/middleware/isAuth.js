@@ -5,7 +5,11 @@ import jwt  from "jsonwebtoken"
 
 const isAuth= async(req , res, next)=>{
     try {
-        const {token}= req.cookies
+        let token = req.cookies?.token;
+        if(!token && req.header.authorization){
+            token = req.headers.authorization.split(" ")[1]; // Bearer token
+            
+         }
 
         if(!token){
             return res.status(401).json({
