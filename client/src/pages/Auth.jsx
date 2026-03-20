@@ -22,9 +22,12 @@ const Auth = ({isModel= false})=>{
                     const result = await axios.post(ServerUrl +"/api/auth/google",{
                         name,
                         email,
-                    },{withCredentials:true}
-                    ) 
+                    }
+                    )
+                   localStorage.setItem("token", result.data.token);
+                  
                     if (result.data.success) {
+                   localStorage.setItem("token", result.data.token); // ✅ safe       
                     dispatch(setUserData(result.data.user))
                      }
                     
