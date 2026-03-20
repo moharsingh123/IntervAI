@@ -24,9 +24,10 @@ const Auth = ({isModel= false})=>{
                         email,
                     }
                     )
-                   localStorage.setItem("token", result.data.token);
+                  
                   
                     if (result.data.success) {
+                        console.log("TOKEN:" , result.data.token)
                    localStorage.setItem("token", result.data.token); // ✅ safe       
                     dispatch(setUserData(result.data.user))
                      }

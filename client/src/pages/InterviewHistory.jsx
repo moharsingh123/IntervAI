@@ -11,7 +11,17 @@ const InterviewHistory= ()=>{
     useEffect(()=>{
         const getMyInterviews= async()=>{
             try {
-                const result = await axios.get(ServerUrl +'/api/interview/get-interview' , {withCredentials:true});
+                const token = localStorage.getItem("token");
+                if(!token){
+                    console.error("No auth token in localStorage; please login.");
+                    return;
+                }
+                const result = await axios.get(ServerUrl +'/api/interview/get-interview', {
+                    withCredentials: true,
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 if(!result.data){
                     console.log(" Result data is not found  ")
                 }
