@@ -259,12 +259,21 @@ const Step2Interview = ({interviewData , onFinish})=>{
         stopMic();
         setIsSubmitting(true);
         try {
-            const result= await axios.post(ServerUrl + '/api/interview/submit-answer' ,{
+            const token = localStorage.getItem("token");
+        if(!token){
+            throw new Error("No auth token found in localStorage. Please login first.");
+        }
+        const result= await axios.post(ServerUrl + '/api/interview/submit-answer' ,{
                 interviewId,
                 questionIndex:currentIndex,
                 answer,
                 timeTaken:currentQuestion.timeLimits-timeLeft,
-            }, {withCredentials:true})
+            }, {
+                withCredentials:true,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             console.log(result);
             setFeedback(result.data.feedback);
             speakText(result.data.feedback);
@@ -297,7 +306,16 @@ const Step2Interview = ({interviewData , onFinish})=>{
         stopMic();
         setIsMicOn(false);        
         try {
-            const result = await axios.post(ServerUrl + '/api/interview/finish' , {interviewId} , {withCredentials:true})
+            const token = localStorage.getItem("token");
+        if(!token){
+            throw new Error("No auth token found in localStorage. Please login first.");
+        }
+        const result = await axios.post(ServerUrl + '/api/interview/finish' , {interviewId} , {
+            withCredentials:true,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             console.log(result.data);
             onFinish(result.data);
 
