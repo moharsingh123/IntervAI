@@ -10,13 +10,24 @@ import interviewRouter from './routes/iterview.route.js'
 import paymentRouter from './routes/payment.route.js';
 dotenv.config();
 const app= express();
-app.use(cors(
-    {
-        origin:"https://intervai-2-client-7n9q.onrender.com", // in production it should be the frontend url
-        credentials:true
+const allowedOrigins = [
+    process.env.CLIENT_URL,
+    "http://localhost:5173",
+    "https://intervai-2-client-7n9q.onrender.com",
+    "https://intervai-1-6oqp.onrender.com",
+    "https://intervai-client-1azb.onrender.com"
+].filter(Boolean);
 
-    }
-))
+app.use(cors({
+    origin: function(origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        callback(new Error("Not allowed by CORS"));
+    },
+    credentials:true
+}))
 
 app.use(express.json()) // to parse the json data from the request body
 app.use(cookieParser())
