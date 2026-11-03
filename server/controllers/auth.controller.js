@@ -46,7 +46,7 @@ export const googleAuth= async(req, res)=>{
 
 
     } catch (error) {
-        console.log("Google Auth Error:", error);
+       console.error("Google sign-in failed:", error.response?.data?.message || error.message);
         return  res.status(500).json({
             success:false,
             message:"Google authentication failed"
