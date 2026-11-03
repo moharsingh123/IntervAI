@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { GiRobotGolem ,GiRobotAntennas  ,GiFlintSpark} from "react-icons/gi";
 import { FcGoogle } from "react-icons/fc";
 
@@ -11,8 +11,15 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 const Auth = ({isModel= false})=>{
          const dispatch = useDispatch()
+    const signInInProgress = useRef(false)
+    const [isSigningIn, setIsSigningIn] = useState(false)
+    const [authError, setAuthError] = useState("")
         const  handleGoogleAuth= async ()=>{
-                console.log("Google auth")
+        if (signInInProgress.current) return
+
+        signInInProgress.current = true
+        setIsSigningIn(true)
+        setAuthError("")
                 try {
                   const response =   await signInWithPopup(auth , provider)
                   let ResponseUser = response.user
@@ -35,8 +42,16 @@ const Auth = ({isModel= false})=>{
                      }
                     
                 } catch (error) {
-                    console.log(error);
+                    if (error.code === "auth/cancelled-popup-request" || error.code === "auth/popup-closed-by-user") {
+                        return
+                    }
+
+                    console.error("Google sign-in failed:", error)
+                    setAuthError(error.response?.data?.message || "Google sign-in failed. Please try again.")
                     dispatch(setUserData(null))
+                } finally {
+                    signInInProgress.current = false
+                    setIsSigningIn(false)
                 }
         }
     return(
@@ -69,15 +84,18 @@ const Auth = ({isModel= false})=>{
                  </p>
                 <motion.button
                 onClick={handleGoogleAuth}
+                disabled={isSigningIn}
+                aria-busy={isSigningIn}
                 // animation properties
                 whileHover={{opacity:0.9 , scale:1.04}}
                 whileTap={{opopacity:1 , scale:0.94}}
 
                  className="w-full flex items-center justify-center gap-3 py-3
-                bg-black text-white rounded-full shadow-md" >
+                bg-black text-white rounded-full shadow-md disabled:cursor-not-allowed disabled:opacity-60" >
                     <FcGoogle size={20} />
-                    Continue with Google
+                    {isSigningIn ? "Signing in..." : "Continue with Google"}
                 </motion.button>
+                {authError && <p role="alert" className="mt-3 text-center text-sm text-red-600">{authError}</p>}
                 
             </motion.div>
             
