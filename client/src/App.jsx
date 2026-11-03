@@ -21,13 +21,15 @@ const App =()=>{
     const getUser = async()=>{
       try {
         const token = localStorage.getItem("token");
+        if (!token) {
+          dispatch(setUserData(null));
+          return;
+        }
+
         const config = {
           withCredentials:true,
-          headers: {}
+          headers: {Authorization: `Bearer ${token}`}
         };
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
 
         const result = await axios.get(ServerUrl + '/api/user/current-user', config)
        dispatch(setUserData(result.data.user))

@@ -22,7 +22,8 @@ const Auth = ({isModel= false})=>{
                     const result = await axios.post(ServerUrl +"/api/auth/google",{
                         name,
                         email,
-                    }
+                    },
+                    {withCredentials:true}
                     )
                   
                   console.log("FULL RESPONSE:", result);

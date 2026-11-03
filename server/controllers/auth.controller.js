@@ -9,14 +9,22 @@ import getToken from "../config/token.js";
 // creat a token  AND  store it the cookies
 export const googleAuth= async(req, res)=>{
     try {
-        const {name , email}= req.body; 
+        const {name , email}= req.body ?? {};
+        if (typeof name !== "string" || !name.trim() || typeof email !== "string" || !email.trim()) {
+            return res.status(400).json({
+                success:false,
+                message:"A valid name and email are required"
+            });
+        }
+
+        const normalizedEmail = email.trim().toLowerCase();
         // check if the user already exists in the database
-        let user= await User.findOne({email});
+        let user= await User.findOne({email:normalizedEmail});
         if(!user){
-            user = await User.create({name , email})
+            user = await User.create({name:name.trim() , email:normalizedEmail})
         }
         // create a token
-        const token = await getToken(user._id); // 
+        const token = getToken(user._id);
         
         // store the token in the cookies
         res.cookie("token" ,token ,
@@ -41,7 +49,7 @@ export const googleAuth= async(req, res)=>{
         console.log("Google Auth Error:", error);
         return  res.status(500).json({
             success:false,
-            message:`"Google Auth  server error: ${error.message}"`
+            message:"Google authentication failed"
         })
 
     }
